@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>隔行换色与鼠标经过换色</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/reset.css" media="all"/>
+    <style type="text/css">
+        .demo {
+            width: 600px;
+            margin: 100px auto;
+            padding: 0;
+        }
+        .table {
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        .table th {
+            background: #f5f5f5;
+        }
+        .table tr.even td {
+            background: #dff0d8;
+        }
+        .table tr.hover td {
+            background: #fcf8e3;
+        }
+        .table tr.on td {
+            background: #d9edf7;
+        }
+    </style>
+</head>
+<body>
+<div id="div" class="demo">
+    <table class="table">
+        <tr>
+            <th>表头内容</th>
+            <th>表头内容</th>
+            <th>表头内容</th>
+        </tr>
+        <tr>
+            <td>表格内容1</td>
+            <td>表格内容2</td>
+            <td>表格内容3</td>
+        </tr>
+        <tr>
+            <td>表格内容1</td>
+            <td>表格内容2</td>
+            <td>表格内容3</td>
+        </tr>
+        <tr>
+            <td>表格内容1</td>
+            <td>表格内容2</td>
+            <td>表格内容3</td>
+        </tr>
+        <tr>
+            <td>表格内容1</td>
+            <td>表格内容2</td>
+            <td>表格内容3</td>
+        </tr>
+        <tr>
+            <td>表格内容1</td>
+            <td>表格内容2</td>
+            <td>表格内容3</td>
+        </tr>
+    </table>
+</div>
+<script>
+    (function() {
+        var div = document.getElementById('div');
+        var tab = div.getElementsByTagName('table')[0];
+        var tr = tab.getElementsByTagName('tr');
+        var tmp = '';
+        for(var i = 0; i < tr.length; i ++) {
+            if(i % 2 == 0) {
+                tr[i].className = 'even';//隔行换色
+            }
+            if(i > 0) {
+                tr[i].index = i;
+                tr[i].onmouseover = function () {//鼠标经过换色
+                    if (this.index == 0) {//如果该行是表头就return掉
+                        return;
+                    }
+                    tmp = this.className;//把'even'暂存在tmp中
+                    this.className = 'hover';
+                }
+                tr[i].onmouseout = function () {//鼠标离开恢复
+                    if (this.index == 0) {
+                        return;
+                    }
+                    this.className = tmp;//把'even'还给className
+                }
+            }
+        }
+    }());
+</script>
+</body>
+</html>

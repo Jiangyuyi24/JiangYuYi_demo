@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>仿时光网图片轮播</title>
+</head>
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	.container {
+		width: 1200px;
+		height: 360px;
+		overflow: hidden;
+		margin: 30px auto;
+		position: relative;
+	}
+	.img-list {
+		position: absolute;
+		left: -1200px;
+		width: 8400px;
+		height: 360px;
+	}
+	.img-list img {
+		display: block;
+		float: left;
+		cursor: pointer;
+	}
+	.icon-list {
+		width: 150px;
+		height: 20px;
+		position: absolute;
+		left: 525px;
+		bottom: 10px;
+	}
+	.icon-list span {
+		display: block;
+		float: left;
+		width: 14px;
+		height: 14px;
+		background: #ccc;
+		border-radius: 7px;
+		margin: 0 8px;
+		cursor: pointer;
+		z-index: 2;
+	}
+	.icon-list span.active {
+		background: #267FD4;
+	}
+	.arrow-bg {
+		background: rgba(0,0,0,.5);
+		width: 50px;
+		height: 100px;
+		position: absolute;
+		top: 130px;
+	}
+	.arrow_p {
+		left: 0px;
+	}
+	.arrow_n {
+		right: 0px;
+	}
+	.arrow {
+		font-size: 60px;
+		color: #ccc;
+		text-decoration: none;
+		width: 50px;
+		height: 100px;
+		line-height: 100px;
+		position: absolute;
+		left: 10px;
+	}
+	.arrow-bg:hover {
+		background: rgba(0,0,0,.8);
+	}
+	.arrow:hover {
+		color: #fff;
+	}
+</style>
+<body>
+	<div class="container" id="container">
+		<div class="img-list" id="img_lsit">
+			<img src="images/5.jpg" alt="">
+			<img src="images/1.jpg" alt="">
+			<img src="images/2.jpg" alt="">
+			<img src="images/3.jpg" alt="">
+			<img src="images/4.jpg" alt="">
+			<img src="images/5.jpg" alt="">
+			<img src="images/1.jpg" alt="">
+		</div>
+		<div class="icon-list" id="icon_list">
+			<span class="icon" id="icon"></span>
+			<span class="icon" id="icon"></span>
+			<span class="icon" id="icon"></span>
+			<span class="icon" id="icon"></span>
+			<span class="icon" id="icon"></span>
+		</div>
+		<div class="arrow-bg arrow_p"><a href="javascript:;" id="prev" class="arrow">&lt;</a></div>
+	    <div class="arrow-bg arrow_n"><a href="javascript:;" id="next" class="arrow">&gt;</a></div>
+	</div>
+	<script>
+		var container = document.getElementById('container');
+		var img_list = document.getElementById('img_lsit');
+		var img = img_lsit.getElementsByTagName('img');
+		var len = img.length;
+		var next = document.getElementById('next');
+		var prev = document.getElementById('prev');
+		var width_all = getStyle(img_lsit,'width');
+		var width = parseInt(width_all)/len;
+		var icon_list = document.getElementById('icon_list');
+		var icon = icon_list.getElementsByTagName('span');
+
+		var timer = setInterval(banner,2000);
+
+		var counter = 0;
+		icon[0].className = 'active';
+		next.onclick = function () {
+			banner();
+		}
+
+		function banner () {
+			if (counter < icon.length - 1) {
+				counter ++;
+			} else {
+				counter = 0;
+				img_lsit.style.left = 0;
+			}
+			scroll();
+			for (i = 0; i < icon.length; i ++) {
+				icon[i].className = '';
+			};
+			icon[counter].className = 'active';
+		}
+
+		prev.onclick = function () {
+			if (counter > 0) {
+				counter --;
+			} else {
+				counter = icon.length - 1;
+				img_lsit.style.left = - ((len - 1) * width) + 'px';
+			}
+
+			scroll();
+			for (i = 0; i < icon.length; i ++) {
+				icon[i].className = '';
+			};
+			icon[counter].className = 'active';
+		}
+
+		for (i = 0; i < icon.length; i ++) {
+			(function (i) {
+				icon[i].onclick = function () {
+					img_lsit.style.left = - (width*(i + 1)) + 'px';
+					for (var j = 0; j < icon.length; j ++) {
+						icon[j].className = '';
+					};
+					icon[i].className = 'active';
+					counter = i;
+				}
+			})(i);
+		};
+
+		container.onmouseover = function() {
+            clearInterval(timer);
+        }
+        container.onmouseout = function() {
+            timer = setInterval(banner, 3000);
+        }
+
+
+		function scroll() {
+			animate(img_lsit, 'left', - (width*(counter + 1)));
+		}
+
+		function animate(obj, attr, target, fn) {
+				obj.timer && clearInterval(obj.timer);
+	            
+	            obj.timer = setInterval(function(){
+	                var cur = parseInt(getStyle(obj, attr));
+	                var speed = (target - cur) / 8;
+	                speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+	                var stop = true;
+
+	                if(cur != target){
+	                    stop = false;
+	                    obj.style[attr] = cur + speed + 'px';
+	                }
+	                if(stop){
+	                    clearInterval(obj.timer);
+	                    obj.timer = null;
+	                    fn && fn();
+	                }
+
+	            }, 30);
+			}
+
+		function getStyle(obj, attr) {
+				var value;
+				if (typeof window.getComputedStyle != 'undefined') {//W3C
+					value = window.getComputedStyle(obj, null)[attr];
+				} else if (typeof obj.currentStyle != 'undeinfed') {//IE
+					value = obj.currentStyle[attr];
+				}
+				return value;
+			}
+		</script>
+</body>
+</html>
